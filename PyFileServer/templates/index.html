@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Server</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>Upload Files to {{ subfolder or 'Storage' }}</h1>
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
+      <input type="file" name="files" id="fileInput" multiple>
+      <ul id="fileList"></ul>
+      <input type="submit" value="Upload">
+    </form>
+
+    <h2>Sections</h2>
+    <ul>
+      <li><a href="/">Upload</a></li>
+      <li><a href="/list/">List Files</a></li>
+    </ul>
+
+    {% if subfolder %}
+      <p><a href="{{ url_for('index', subfolder=subfolder.rsplit('/', 1)[0]) }}">Back to Parent Folder</a></p>
+    {% endif %}
+
+    <script>
+      document.getElementById('fileInput').addEventListener('change', function() {
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = '';  // Clear any existing file names
+
+        const files = this.files;
+        for (let i = 0; i < files.length; i++) {
+          const li = document.createElement('li');
+          li.textContent = files[i].name;
+          fileList.appendChild(li);
+        }
+      });
+
+      document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        const files = document.getElementById('fileInput').files;
+        if (files.length > 0) {
+          this.submit();  // Proceed with the form submission
+
+          alert(files.length + ' file(s) uploaded successfully');
+        } else {
+          alert('No files selected.');
+        }
+      });
+    </script>
+  </body>
+</html>

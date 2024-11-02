@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>Files in {{ subfolder or 'Root' }}</h1>
+    <ul>
+      {% for file in files %}
+        {% if '.' not in file %}
+          <li><a href="{{ url_for('list_files', subfolder=(subfolder + '/' + file).strip('/')) }}">{{ file }}/</a></li>
+        {% else %}
+          <li><a href="{{ url_for('download_file', subfolder=subfolder, filename=file) }}">{{ file }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <h2>Sections</h2>
+    <ul>
+      <li><a href="/">Upload</a></li>
+      <li><a href="/list/">List Files</a></li>
+    </ul>
+
+    {% if subfolder %}
+      <p><a href="{{ url_for('list_files', subfolder=subfolder.rsplit('/', 1)[0]) }}">Back to Parent Folder</a></p>
+    {% endif %}
+  </body>
+</html>
